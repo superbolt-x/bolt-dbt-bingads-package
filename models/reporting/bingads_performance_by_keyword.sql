@@ -4,7 +4,7 @@
 
 {%- set date_granularity_list = ['day','week','month','quarter','year'] -%}
 {%- set exclude_fields = ['date','day','week','month','quarter','year','last_updated','unique_key','destination_url'] -%}
-{%- set dimensions = ['keyword_id','ad_id'] -%}
+{%- set dimensions = ['keyword_id'] -%}
 {%- set measures = adapter.get_columns_in_relation(ref('bingads_keywords_insights'))
                     |map(attribute="name")
                     |reject("in",exclude_fields)
@@ -31,14 +31,9 @@ WITH
     ),
     {%- endfor %}
 
-    keywords AS 
+    keywords AS
     (SELECT keyword_id, name, match_type, status
     FROM {{ ref('bingads_keywords') }}
-    ),
-    
-    ads AS 
-    (SELECT {{ dbt_utils.star(from = ref('bingads_ads'), except = ["unique_key"]) }}
-    FROM {{ ref('bingads_ads') }}
     ),
 
     ad_groups AS 
@@ -58,7 +53,7 @@ WITH
 
 SELECT *,
     {{ get_bingads_default_campaign_types('campaign_name')}},
-    date||'_'||date_granularity||'_'||ad_group_id||'_'||ad_id||'_'||keyword_id as unique_key
+    date||'_'||date_granularity||'_'||ad_group_id||'_'||keyword_id as unique_key
 FROM 
     ({% for date_granularity in date_granularity_list -%}
     SELECT *
@@ -69,7 +64,6 @@ FROM
     {%- endfor %}
     )
 LEFT JOIN keywords USING(keyword_id)
-LEFT JOIN ads USING(ad_id)
 LEFT JOIN ad_groups USING(ad_group_id)
 LEFT JOIN campaigns USING(campaign_id)
 LEFT JOIN accounts USING(account_id)

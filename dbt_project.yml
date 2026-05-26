@@ -29,6 +29,9 @@ vars:
     week_start: 'Monday' # Abbreviation and full name both work
     currency: "USD"
 
+    # Bingads vars
+    bingads_conversion_used_by_custom_conversions: 'conversions'   # Bingads custom conversions can use conversions or all_conversions
+
 models:
   bolt_dbt_bingads_package:
     base:
