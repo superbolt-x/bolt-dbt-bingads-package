@@ -22,6 +22,7 @@
 -%}
 {%- set convtype_include_fields = [
     "date",
+    "ad_group_id",
     "keyword_id",
     "goal",
     "conversions",
@@ -80,6 +81,7 @@ WITH insights AS
     , convtype AS (
     SELECT
         date,
+        ad_group_id,
         keyword_id,
         {% for conversion in conversions -%}
         COALESCE(SUM(CASE WHEN goal = '{{conversion}}' THEN {{ bingads_conv }} ELSE 0 END), 0) as "{{get_bingads_clean_conversion_name(conversion)}}",
@@ -87,7 +89,7 @@ WITH insights AS
         {%- if not loop.last %},{%- endif %}
         {% endfor %}
     FROM convtype_raw
-    GROUP BY 1, 2
+    GROUP BY 1, 2, 3
     )
     {%- endif %}
 
@@ -96,7 +98,7 @@ SELECT *,
     ad_group_id||'_'||keyword_id||'_'||date as unique_key
 FROM insights_agg
 {%- if convtype_table_exists %}
-LEFT JOIN convtype USING(date, keyword_id)
+LEFT JOIN convtype USING(date, ad_group_id, keyword_id)
 {%- endif %}
 {% if is_incremental() -%}
 
