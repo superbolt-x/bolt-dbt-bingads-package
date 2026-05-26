@@ -32,7 +32,7 @@ WITH
     {%- endfor %}
 
     keywords AS
-    (SELECT keyword_id, name, match_type, status
+    (SELECT keyword_id, ad_group_id, name, match_type, status
     FROM {{ ref('bingads_keywords') }}
     ),
 

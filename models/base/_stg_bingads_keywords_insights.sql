@@ -74,7 +74,7 @@ WITH insights AS
     FROM {{ source(schema_name, convtype_table_name) }}
     )
 
-    {% set conversions = dbt_utils.get_column_values(source(schema_name, convtype_table_name), 'goal') -%}
+    {% set conversions = dbt_utils.get_column_values(source(schema_name, convtype_table_name), 'goal', where="goal IS NOT NULL AND goal != ''") -%}
     {% set bingads_conv = var('bingads_conversion_used_by_custom_conversions') -%}
     {% set conv_value_map = {'conversions': 'revenue', 'all_conversions': 'all_revenue'} -%}
     , convtype AS (
