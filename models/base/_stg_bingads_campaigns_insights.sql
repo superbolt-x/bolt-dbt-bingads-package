@@ -66,6 +66,25 @@ WITH insights AS
     FROM {{ source(schema_name, insights_table_name) }}
     )
 
+    , insights_agg AS (
+      SELECT
+        date,
+        account_id,
+        campaign_id,
+        SUM(impressions)     as impressions,
+        SUM(clicks)          as clicks,
+        SUM(spend)           as spend,
+        SUM(conversions)     as conversions,
+        SUM(all_conversions) as all_conversions,
+        SUM(revenue)         as revenue,
+        SUM(all_revenue)     as all_revenue,
+        SUM(assists)         as assists,
+        MAX(currency_code)   as currency_code,
+        MAX(_fivetran_synced) as _fivetran_synced
+      FROM insights
+      GROUP BY 1,2,3
+    )
+
     {% set convtype_table_exists = bolt_dbt_utils.check_source_exists(schema_name, convtype_table_name) -%}
     {%- if not convtype_table_exists %}
 
@@ -95,7 +114,7 @@ WITH insights AS
 SELECT *,
     MAX(_fivetran_synced) over (PARTITION BY account_id) as last_updated,
     campaign_id||'_'||date as unique_key
-FROM insights
+FROM insights_agg
 {%- if convtype_table_exists %}
 LEFT JOIN convtype USING(date, campaign_id)
 {%- endif %}
