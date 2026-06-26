@@ -53,8 +53,7 @@
     "all_revenue"
 ]-%}
 
-{%- set insights_fields = adapter.get_columns_in_relation(source(schema_name, insights_table_name))
-                    |map(attribute="name")
+{%- set insights_fields = get_bingads_column_names(source(schema_name, insights_table_name))
                     |reject("in",insights_exclude_fields)
                     -%}
 
