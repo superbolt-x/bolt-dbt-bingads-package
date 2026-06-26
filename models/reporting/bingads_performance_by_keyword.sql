@@ -5,12 +5,11 @@
 {%- set date_granularity_list = ['day','week','month','quarter','year'] -%}
 {%- set exclude_fields = ['date','day','week','month','quarter','year','last_updated','unique_key','destination_url'] -%}
 {%- set dimensions = ['keyword_id'] -%}
-{%- set measures = adapter.get_columns_in_relation(ref('bingads_keywords_insights'))
-                    |map(attribute="name")
+{%- set measures = get_bingads_column_names(ref('bingads_keywords_insights'))
                     |reject("in",exclude_fields)
                     |reject("in",dimensions)
                     |list
-                    -%}  
+                    -%}
 
 WITH 
     {%- for date_granularity in date_granularity_list %}
