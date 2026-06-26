@@ -1,6 +1,7 @@
-{{ config( 
+{{ config(
         materialized='incremental',
-        unique_key='unique_key'
+        unique_key='unique_key',
+        on_schema_change='sync_all_columns'
 ) }}
 
 
