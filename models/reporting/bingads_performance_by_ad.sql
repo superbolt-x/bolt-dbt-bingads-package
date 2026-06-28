@@ -133,7 +133,7 @@ WITH
     ),
 
     campaigns AS
-    (SELECT {{ dbt_utils.star(from = ref('bingads_campaigns'), except = ["unique_key"]) }}
+    (SELECT campaign_id, campaign_name, campaign_budget, campaign_status, account_id, campaign_type
     FROM {{ ref('bingads_campaigns') }}
     ),
 
