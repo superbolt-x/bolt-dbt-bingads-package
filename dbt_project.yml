@@ -39,16 +39,6 @@ models:
       +schema: bingads_base
       +materialized: table
 
-      # ---------------------------------------------------------------
-      # Redundant "currency conversion + date parts" middle tables.
-      # The reporting models now read the _stg_*_insights day-grain models
-      # directly (currency + date parts applied inline), so these no longer
-      # need to materialize.
-      # ---------------------------------------------------------------
-      bingads_ads_insights:       {+enabled: false}
-      bingads_campaigns_insights: {+enabled: false}
-      bingads_keywords_insights:  {+enabled: false}
-
     reporting:
       +schema: reporting
       +materialized: table
