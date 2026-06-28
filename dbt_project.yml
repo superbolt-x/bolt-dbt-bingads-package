@@ -31,12 +31,23 @@ vars:
 
     # Bingads vars
     bingads_conversion_used_by_custom_conversions: 'all_conversions'   # Bingads custom conversions can use conversions or all_conversions
+    bingads_lookback_days: 31   # incremental reprocessing window; covers the 30-day conversion lookback + 1 day buffer
 
 models:
   bolt_dbt_bingads_package:
     base:
       +schema: bingads_base
       +materialized: table
+
+      # ---------------------------------------------------------------
+      # Redundant "currency conversion + date parts" middle tables.
+      # The reporting models now read the _stg_*_insights day-grain models
+      # directly (currency + date parts applied inline), so these no longer
+      # need to materialize.
+      # ---------------------------------------------------------------
+      bingads_ads_insights:       {+enabled: false}
+      bingads_campaigns_insights: {+enabled: false}
+      bingads_keywords_insights:  {+enabled: false}
 
     reporting:
       +schema: reporting
