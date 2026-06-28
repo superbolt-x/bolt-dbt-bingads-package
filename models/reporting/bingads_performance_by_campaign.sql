@@ -136,7 +136,7 @@ WITH
     ),
 
     accounts AS
-    (SELECT {{ dbt_utils.star(from = ref('bingads_accounts'), except = ["unique_key"]) }}
+    (SELECT account_id, account_name, account_currency_code
     FROM {{ ref('bingads_accounts') }}
     )
 

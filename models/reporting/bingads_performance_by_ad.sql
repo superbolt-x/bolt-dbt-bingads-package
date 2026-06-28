@@ -123,12 +123,12 @@ WITH
     {%- endfor %}
 
     ads AS
-    (SELECT {{ dbt_utils.star(from = ref('bingads_ads'), except = ["unique_key"]) }}
+    (SELECT ad_id, ad_text, ad_type, ad_status, ad_group_id
     FROM {{ ref('bingads_ads') }}
     ),
 
     ad_groups AS
-    (SELECT {{ dbt_utils.star(from = ref('bingads_ad_groups'), except = ["unique_key"]) }}
+    (SELECT ad_group_id, ad_group_name, ad_group_status, campaign_id
     FROM {{ ref('bingads_ad_groups') }}
     ),
 
@@ -138,7 +138,7 @@ WITH
     ),
 
     accounts AS
-    (SELECT {{ dbt_utils.star(from = ref('bingads_accounts'), except = ["unique_key"]) }}
+    (SELECT account_id, account_name, account_currency_code
     FROM {{ ref('bingads_accounts') }}
     )
 
