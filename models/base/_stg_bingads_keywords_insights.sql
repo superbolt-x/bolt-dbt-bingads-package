@@ -4,7 +4,7 @@
 ) }}
 
 
-{%- set schema_name, insights_table_name, convtype_table_name = 'bingads_raw', 'keyword_performance_daily_report', 'keyword_conversion_performance_daily_report' -%}
+{%- set schema_name, insights_table_name, convtype_table_name = 'bingads_raw', 'keyword_performance_daily_report', 'conversion_performance_daily_report' -%}
 {%- set insights_exclude_fields = [
    "ctr",
    "average_cpc",
