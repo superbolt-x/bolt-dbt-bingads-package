@@ -4,7 +4,7 @@
 ) }}
 
 
-{%- set schema_name, insights_table_name, convtype_table_name = 'bingads_raw', 'campaign_impression_performance_daily_report', 'conversion_performance_daily_report' -%}
+{%- set schema_name, insights_table_name, convtype_table_name = 'bingads_raw', 'campaign_impression_performance_daily_report', 'campaign_conversion_performance_daily_report' -%}
 {%- set insights_exclude_fields = [
    "_fivetran_id",
    "ctr",
