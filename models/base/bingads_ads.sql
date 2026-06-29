@@ -1,3 +1,5 @@
+{{ config(materialized='ephemeral') }}
+
 {%- set selected_fields = [
     "id",
     "text",

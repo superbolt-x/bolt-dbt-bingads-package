@@ -31,6 +31,7 @@ vars:
 
     # Bingads vars
     bingads_conversion_used_by_custom_conversions: 'all_conversions'   # Bingads custom conversions can use conversions or all_conversions
+    bingads_lookback_days: 31   # incremental reprocessing window; covers the 30-day conversion lookback + 1 day buffer
 
 models:
   bolt_dbt_bingads_package:
