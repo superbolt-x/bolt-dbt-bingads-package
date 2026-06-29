@@ -32,10 +32,9 @@
 ]
 -%}
 
-{%- set stg_fields = adapter.get_columns_in_relation(ref('_stg_bingads_campaigns_insights'))
-                    |map(attribute="name")
+{%- set stg_fields = get_bingads_column_names(ref('_stg_bingads_campaigns_insights'))
                     |reject("in",exclude_fields)
-                    -%}  
+                    -%}
 
 WITH 
     {% if var('currency') != 'USD' -%}
