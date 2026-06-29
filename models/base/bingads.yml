@@ -17,7 +17,6 @@ sources:
         identifier: keyword_history
       - name: ad_performance_daily_report
       - name: campaign_impression_performance_daily_report
-      - name: conversion_performance_daily_report
       - name: campaign_conversion_performance_daily_report
       - name: ad_conversion_performance_daily_report
       - name: conversion_performance_daily_report
