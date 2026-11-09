@@ -133,19 +133,32 @@ WITH
     ),
     {%- endfor %}
 
+    {#- Keywords, ad groups or campaigns deleted from Bing disappear from the *_history tables, which used to leave
+        their spend with no ad group / campaign / account (erie_type = Unmapped). The performance report carries
+        the ids on every row, so they are the fallback. -#}
+    report_ids AS
+    (SELECT keyword_id, MAX(ad_group_id) as ad_group_id, MAX(campaign_id) as campaign_id, MAX(account_id) as account_id
+    FROM {{ ref('_stg_bingads_keywords_insights') }}
+    GROUP BY 1
+    ),
+
     keywords AS
-    (SELECT keyword_id, ad_group_id, name, match_type, status
-    FROM {{ ref('bingads_keywords') }}
+    (SELECT r.keyword_id, COALESCE(k.ad_group_id, r.ad_group_id) as ad_group_id, k.name, k.match_type, k.status
+    FROM report_ids r
+    LEFT JOIN {{ ref('bingads_keywords') }} k USING(keyword_id)
     ),
 
     ad_groups AS
-    (SELECT ad_group_id, ad_group_name, ad_group_status, campaign_id
-    FROM {{ ref('bingads_ad_groups') }}
+    (SELECT r.ad_group_id, g.ad_group_name, g.ad_group_status, COALESCE(g.campaign_id, r.campaign_id) as campaign_id
+    FROM (SELECT ad_group_id, MAX(campaign_id) as campaign_id FROM report_ids GROUP BY 1) r
+    LEFT JOIN {{ ref('bingads_ad_groups') }} g USING(ad_group_id)
     ),
 
     campaigns AS
-    (SELECT campaign_id, campaign_name, campaign_budget, campaign_status, account_id, campaign_type
-    FROM {{ ref('bingads_campaigns') }}
+    (SELECT r.campaign_id, c.campaign_name, c.campaign_budget, c.campaign_status,
+            COALESCE(c.account_id, r.account_id) as account_id, c.campaign_type
+    FROM (SELECT campaign_id, MAX(account_id) as account_id FROM report_ids GROUP BY 1) r
+    LEFT JOIN {{ ref('bingads_campaigns') }} c USING(campaign_id)
     ),
 
     accounts AS
