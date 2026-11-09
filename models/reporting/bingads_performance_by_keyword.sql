@@ -155,7 +155,7 @@ WITH
 
 SELECT *,
     {{ get_bingads_default_campaign_types('campaign_name')}},
-    date||'_'||date_granularity||'_'||ad_group_id||'_'||keyword_id as unique_key
+    date||'_'||date_granularity||'_'||coalesce(ad_group_id::varchar,'none')||'_'||coalesce(keyword_id::varchar,'none') as unique_key
 FROM
     ({% for date_granularity in date_granularity_list -%}
     SELECT *
